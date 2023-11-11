@@ -40,10 +40,7 @@ data class MyAppState(
     val startDestinationRoute: String = Route.SplashRoute.getRouteName()
 ) {
     val currentDestination: NavDestination?
-        @Composable get() = navController
-            .currentBackStackEntryAsState().value?.destination
-
-    var testVariable = "Test"
+        @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 }
 
 @Composable
