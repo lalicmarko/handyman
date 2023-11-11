@@ -17,14 +17,8 @@ class DefaultProfessionRepository @Inject constructor() {
 
     private val ref = Firebase.firestore.collection(COLLECTION_NAME)
 
-    val professionsFlow = flow {
-        Log.d("BOBAN", "DefaultProfessionRepository -> flow started -> ")
-        emit(ref.get().await().documents.map { Profession.from(it) })
-
-        emitAll(ref.snapshots().map { snapshot ->
-            Log.d("BOBAN", "DefaultProfessionRepository -> snapshot listener -> ")
-            snapshot.documents.map { Profession.from(it) }
-        })
+    val professionsFlow = ref.snapshots().map { snapshot ->
+        snapshot.documents.map { Profession.from(it) }
     }
 
     companion object {
