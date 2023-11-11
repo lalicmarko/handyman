@@ -9,11 +9,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import kotlinx.coroutines.delay
-import kotlin.time.Duration.Companion.seconds
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.handyman.ui.viewmodels.AuthViewModel
+
+enum class SplashScreenDirections {
+    TO_LOGIN, TO_MAIN
+}
 
 @Composable
-fun SplashScreen(onSplashScreenFinish: () -> Unit) {
+fun SplashScreen(
+    authViewModel: AuthViewModel = hiltViewModel(),
+    onSplashScreenFinish: (SplashScreenDirections) -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -22,8 +30,10 @@ fun SplashScreen(onSplashScreenFinish: () -> Unit) {
         CircularProgressIndicator()
 
         LaunchedEffect(key1 = Unit, block = {
-            delay(4.seconds)
-            onSplashScreenFinish()
+            when (authViewModel.isLogged()) {
+                true -> onSplashScreenFinish(SplashScreenDirections.TO_MAIN)
+                false -> onSplashScreenFinish(SplashScreenDirections.TO_LOGIN)
+            }
         })
     }
 }
