@@ -1,6 +1,5 @@
-package com.example.handyman.data
+package com.example.handyman.data.model
 
-import android.util.Log
 import com.example.handyman.util.orZero
 import com.google.firebase.firestore.DocumentSnapshot
 

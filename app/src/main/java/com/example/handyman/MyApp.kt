@@ -23,7 +23,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.handyman.navigation.Route
+import com.example.handyman.navigation.toRoute
 import com.example.handyman.ui.screens.AuthorizationScreen
+import com.example.handyman.ui.screens.MainScreen
 import com.example.handyman.ui.screens.OnboardingScreen
 import com.example.handyman.ui.screens.SplashScreen
 import kotlinx.coroutines.CoroutineScope
@@ -56,24 +58,19 @@ fun rememberMyAppState(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyApp(modifier: Modifier, myAppState: MyAppState = rememberMyAppState()) {
-    Scaffold(
-        modifier = modifier,
-        topBar = {
-            TopAppBar(title = {
-                Text(text = "Welcome {user}")
-            })
-        },
-        bottomBar = {
-            BottomAppBar {
-                Text(text = "Bottom App Bar")
-            }
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = { }) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
-            }
+    Scaffold(modifier = modifier, topBar = {
+        TopAppBar(title = {
+            Text(text = "Welcome {user}")
+        })
+    }, bottomBar = {
+        BottomAppBar {
+            Text(text = "Bottom App Bar")
         }
-    ) { innerPadding ->
+    }, floatingActionButton = {
+        FloatingActionButton(onClick = { }) {
+            Icon(Icons.Default.Add, contentDescription = "Add")
+        }
+    }) { innerPadding ->
         MyNavHost(myAppState, modifier = modifier.padding(innerPadding))
     }
 }
@@ -97,9 +94,13 @@ fun MyNavHost(myAppState: MyAppState, modifier: Modifier = Modifier) {
         }
 
         composable(Route.SplashRoute.getRouteName()) {
-            SplashScreen {
-                Route.AuthorizationRoute.navigateToThis(navController = navController)
+            SplashScreen { splashDirection ->
+                navController.navigate(splashDirection.toRoute())
             }
+        }
+
+        composable(Route.Main.getRouteName()) {
+            MainScreen()
         }
     }
 }

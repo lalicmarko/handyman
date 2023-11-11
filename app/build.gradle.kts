@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.com.google.devtools.ksp)
     alias(libs.plugins.com.google.gms.google.services)
+    alias(libs.plugins.com.google.dagger.hilt.android)
 }
 
 android {
@@ -72,6 +73,10 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.compose.navigation)
     implementation(libs.coroutines)
+
+    implementation(libs.hilt.navigation.compose)
+    implementation(libs.hilt)
+    ksp(libs.hilt.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

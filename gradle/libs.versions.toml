@@ -27,19 +27,24 @@ ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview
 ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 material3 = { group = "androidx.compose.material3", name = "material3" }
-firebase-bom = { module = "com.google.firebase:firebase-bom", version = "32.5.0"}
+firebase-bom = { module = "com.google.firebase:firebase-bom", version = "32.5.0" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
 firebase-auth = { module = "com.google.firebase:firebase-auth-ktx" }
-firebase-firestore = { module = "com.google.firebase:firebase-firestore-ktx"}
+firebase-firestore = { module = "com.google.firebase:firebase-firestore-ktx" }
 compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "navigation-compose" }
 
-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines"}
+coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+
+hilt = { module = "com.google.dagger:hilt-android", version = "2.48.1" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version = "2.48.1" }
+hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version = "1.1.0" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
-com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
+com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 com-google-gms-google-services = { id = "com.google.gms.google-services", version = "4.4.0" }
+com-google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version = "2.48.1" }
 
 [bundles]
 

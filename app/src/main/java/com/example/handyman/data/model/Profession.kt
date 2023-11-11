@@ -1,4 +1,4 @@
-package com.example.handyman.data
+package com.example.handyman.data.model
 
 import com.google.firebase.firestore.DocumentSnapshot
 
