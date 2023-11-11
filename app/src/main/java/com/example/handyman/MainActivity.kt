@@ -1,6 +1,7 @@
 package com.example.handyman
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -15,7 +16,10 @@ import androidx.lifecycle.lifecycleScope
 import com.example.handyman.data.repo.DefaultAuthRepository
 import com.example.handyman.ui.theme.HandymanTheme
 import com.example.handyman.ui.viewmodels.AuthViewModel
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
