@@ -47,6 +47,8 @@ class DefaultAuthRepository @Inject constructor() {
         }
     }
 
+    fun getLoggedUser(): String? = auth.currentUser?.email
+
     fun isLogged(): Boolean = auth.currentUser != null
 
     companion object {

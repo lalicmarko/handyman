@@ -1,5 +1,15 @@
 package com.example.handyman.navigation
 
+import android.graphics.drawable.Icon
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.handyman.ui.screens.SplashScreenDirections
 
 fun SplashScreenDirections.toRoute(): String {
@@ -13,11 +23,17 @@ sealed interface Route {
 
     fun getRouteName(): String
 
+    fun getIconImageVector(): ImageVector
+
     data object Main : Route {
         private const val routeName = "main_route"
 
         override fun getRouteName(): String {
             return routeName
+        }
+
+        override fun getIconImageVector(): ImageVector {
+            return Icons.Filled.Home
         }
 
     }
@@ -28,6 +44,10 @@ sealed interface Route {
         override fun getRouteName(): String {
             return routeName
         }
+
+        override fun getIconImageVector(): ImageVector {
+            return Icons.Filled.Lock
+        }
     }
 
     data object OnboardingRoute : Route {
@@ -36,6 +56,10 @@ sealed interface Route {
         override fun getRouteName(): String {
             return routeName
         }
+
+        override fun getIconImageVector(): ImageVector {
+            return Icons.Filled.Done
+        }
     }
 
     data object SplashRoute : Route {
@@ -43,6 +67,16 @@ sealed interface Route {
 
         override fun getRouteName(): String {
             return routeName
+        }
+
+        override fun getIconImageVector(): ImageVector {
+            return Icons.Filled.ExitToApp
+        }
+    }
+
+    companion object {
+        fun listBottomNavigationRoutes(): List<Route> {
+            return listOf(Main, OnboardingRoute)
         }
     }
 }

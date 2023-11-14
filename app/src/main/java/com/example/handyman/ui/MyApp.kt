@@ -1,7 +1,10 @@
-package com.example.handyman
+package com.example.handyman.ui
 
 import android.util.Log
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.BottomAppBar
@@ -13,10 +16,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,6 +36,7 @@ import com.example.handyman.ui.screens.AuthorizationScreen
 import com.example.handyman.ui.screens.MainScreen
 import com.example.handyman.ui.screens.OnboardingScreen
 import com.example.handyman.ui.screens.SplashScreen
+import com.example.handyman.ui.viewmodels.AuthViewModel
 import kotlinx.coroutines.CoroutineScope
 
 enum class UserType {
@@ -57,14 +66,48 @@ fun rememberMyAppState(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyApp(modifier: Modifier, myAppState: MyAppState = rememberMyAppState()) {
+fun MyApp(
+    modifier: Modifier,
+    authViewModel: AuthViewModel = hiltViewModel(),
+    myAppState: MyAppState = rememberMyAppState()
+) {
     Scaffold(modifier = modifier, topBar = {
         TopAppBar(title = {
-            Text(text = "Welcome {user}")
+            if (authViewModel.isLogged()) {
+                val loggedUser = authViewModel.getLoggedUser()
+                Text(text = "Welcome $loggedUser}")
+            } else {
+                Text(text = "Please sing in}")
+            }
         })
     }, bottomBar = {
-        BottomAppBar {
-            Text(text = "Bottom App Bar")
+        BottomNavigation {
+            val navBackStackEntry by myAppState.navController.currentBackStackEntryAsState()
+            val currentDestination = navBackStackEntry?.destination
+            Route.listBottomNavigationRoutes().forEach { screenRoute ->
+                BottomNavigationItem(
+                    selected = currentDestination?.hierarchy?.any { it.route == screenRoute.getRouteName() } == true,
+                    onClick = {
+                        myAppState.navController.navigate(screenRoute.getRouteName()) {
+                            popUpTo(myAppState.navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            // Avoid multiple copies of the same destination when
+                            // reselecting the same item
+                            launchSingleTop = true
+                            // Restore state when reselecting a previously selected item
+                            restoreState = true
+                        }
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = screenRoute.getIconImageVector(),
+                            contentDescription = "bottom-icon"
+                        )
+                    }
+                )
+            }
+
         }
     }, floatingActionButton = {
         FloatingActionButton(onClick = { }) {
@@ -73,6 +116,12 @@ fun MyApp(modifier: Modifier, myAppState: MyAppState = rememberMyAppState()) {
     }) { innerPadding ->
         MyNavHost(myAppState, modifier = modifier.padding(innerPadding))
     }
+}
+
+@Preview
+@Composable
+fun PreviewMyApp() {
+    MyApp(modifier = Modifier.fillMaxSize())
 }
 
 @Composable

@@ -52,6 +52,8 @@ class AuthViewModel @Inject constructor(
         return authRepository.isLogged()
     }
 
+    fun getLoggedUser() = authRepository.getLoggedUser()
+
     companion object {
         private const val TAG = "AuthViewModel"
     }
