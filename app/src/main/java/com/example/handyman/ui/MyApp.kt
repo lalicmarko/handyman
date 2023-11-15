@@ -77,7 +77,7 @@ fun MyApp(
                 val loggedUser = authViewModel.getLoggedUser()
                 Text(text = "Welcome $loggedUser}")
             } else {
-                Text(text = "Please sing in}")
+                Text(text = "Please sing in")
             }
         })
     }, bottomBar = {

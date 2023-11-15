@@ -1,5 +1,6 @@
 package com.example.handyman.ui.screens
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -35,14 +37,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.handyman.R
+import com.example.handyman.data.model.Handyman
+import com.example.handyman.data.model.Post
+import com.example.handyman.data.model.Profession
 import com.example.handyman.ui.viewmodels.MainViewModel
+import com.example.handyman.ui.viewmodels.MainViewState
+
+@Composable
+fun MainScreen(mainViewModel: MainViewModel = hiltViewModel()) {
+    val state by mainViewModel.stateFlow.collectAsState()
+    MainScreen(state)
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(mainViewModel: MainViewModel = hiltViewModel()) {
+private fun MainScreen(state: MainViewState) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column {
-            val state by mainViewModel.stateFlow.collectAsState()
             val lazyColumnState = rememberLazyListState()
 
             val isTopRowVisible by remember {
@@ -52,59 +63,61 @@ fun MainScreen(mainViewModel: MainViewModel = hiltViewModel()) {
             }
 
             AnimatedVisibility(visible = isTopRowVisible) {
-                LazyRow(modifier = Modifier.height(100.dp)) {
-                    items(state.professionsList.size) {
-                        Surface(onClick = {
-                            // clickable
-                        }) {
-                            Column(
-                                modifier = Modifier
-                                    .width(100.dp)
-                                    .padding(horizontal = 10.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Image(
-                                    modifier = Modifier
-                                        .size(50.dp)
-                                        .clip(CircleShape),
-                                    painter = painterResource(id = R.drawable.tools_icon),
-                                    contentDescription = "Icon"
-                                )
-                                Text(text = state.professionsList[it].name)
-                            }
-                        }
-
-
+                Column {
+                    if (state.professionsList.isEmpty()) {
+                        Text(text = "Empty List of professions.")
                     }
-                }
-            }
-            AnimatedVisibility(visible = isTopRowVisible) {
-                LazyRow {
-                    items(state.handymanList.size) {
-                        Surface(onClick = {
-                            // TODO: Implement
-                        }) {
-                            Column(
-                                modifier = Modifier
-                                    .width(200.dp)
-                                    .padding(horizontal = 10.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Image(
+                    LazyRow(modifier = Modifier.height(100.dp)) {
+                        items(state.professionsList.size) {
+                            Surface(onClick = {
+                                // clickable
+                            }) {
+                                Column(
                                     modifier = Modifier
-                                        .size(120.dp)
-                                        .clip(CircleShape),
-                                    painter = painterResource(id = R.drawable.worker_icon),
-                                    contentDescription = "Icon"
-                                )
-                                Text(text = state.handymanList[it].name)
-                                Text(text = state.handymanList[it].surname)
-                                Text(text = "*".repeat(state.handymanList[it].rating))
+                                        .width(100.dp)
+                                        .padding(horizontal = 10.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Image(
+                                        modifier = Modifier
+                                            .size(50.dp)
+                                            .clip(CircleShape),
+                                        painter = painterResource(id = R.drawable.tools_icon),
+                                        contentDescription = "Icon"
+                                    )
+                                    Text(text = state.professionsList[it].name)
+                                }
                             }
 
                         }
+                    }
+                    LazyRow {
+                        items(state.handymanList.size) {
+                            Surface(onClick = {
+                                // TODO: Implement
+                            }) {
+                                Column(
+                                    modifier = Modifier
+                                        .width(200.dp)
+                                        .padding(horizontal = 10.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    Image(
+                                        modifier = Modifier
+                                            .size(120.dp)
+                                            .clip(CircleShape),
+                                        painter = painterResource(id = R.drawable.worker_icon),
+                                        contentDescription = "Icon"
+                                    )
+                                    Text(text = state.handymanList[it].name)
+                                    Text(text = state.handymanList[it].surname)
+                                    Text(text = "*".repeat(state.handymanList[it].rating))
+                                }
 
+                            }
+
+                        }
                     }
                 }
             }
@@ -159,6 +172,86 @@ fun MainScreen(mainViewModel: MainViewModel = hiltViewModel()) {
 
 @Preview
 @Composable
-fun PreviewMainScreen() {
-    MainScreen()
+fun PreviewMainScreen_WhenEmptyState() {
+    MainScreen(
+        state = MainViewState(
+            handymanList = emptyList(),
+            professionsList = emptyList(),
+            posts = emptyList()
+        )
+    )
+}
+
+@Preview(showSystemUi = true)
+@Preview
+@Composable
+fun PreviewMainScreen_WhenLoadedState() {
+    MainScreen(
+        state = MainViewState(
+            handymanList = listOf(
+                Handyman(
+                    id = "ponderum",
+                    name = "Carole Mejia",
+                    surname = "Verna Martinez",
+                    rating = 5,
+                    professions = listOf()
+                ),
+                Handyman(
+                    id = "cubilia",
+                    name = "Carson Dorsey",
+                    surname = "Socorro Dunn",
+                    rating = 8,
+                    professions = listOf()
+                )
+            ),
+            professionsList = listOf(
+                Profession(id = "solum", name = "Rosalie Church"),
+                Profession(id = "solum2", name = "Rosalie Church2"),
+                Profession(id = "solum3", name = "Rosalie Church3"),
+                Profession(id = "solum4", name = "Rosalie Church4"),
+            ),
+            posts = listOf(
+                Post(
+                    id = "nonumy",
+                    title = "volumus",
+                    description = "consequat",
+                    dateCreated = null,
+                    imgBase64 = "ac",
+                    author = "mentitum"
+                ),
+                Post(
+                    id = "sumo",
+                    title = "quem",
+                    description = "turpis",
+                    dateCreated = null,
+                    imgBase64 = "partiendo",
+                    author = "eripuit"
+                ),
+                Post(
+                    id = "sumo",
+                    title = "quem",
+                    description = "turpis",
+                    dateCreated = null,
+                    imgBase64 = "partiendo",
+                    author = "eripuit"
+                ),
+                Post(
+                    id = "sumo",
+                    title = "quem",
+                    description = "turpis",
+                    dateCreated = null,
+                    imgBase64 = "partiendo",
+                    author = "eripuit"
+                ),
+                Post(
+                    id = "sumo",
+                    title = "quem",
+                    description = "turpis",
+                    dateCreated = null,
+                    imgBase64 = "partiendo",
+                    author = "eripuit"
+                )
+            )
+        )
+    )
 }

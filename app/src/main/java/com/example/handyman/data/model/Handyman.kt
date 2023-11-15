@@ -16,7 +16,7 @@ data class Handyman(
                 id = doc.id,
                 name = doc.getString("name").orEmpty(),
                 surname = doc.getString("surname").orEmpty(),
-                rating = doc.getLong("rating")?.toInt().orZero(),
+                rating = doc.getLong("rating")?.toInt()?.coerceIn(0..10).orZero(),
                 professions = (doc.get("professions") as? ArrayList<String>).orEmpty()
             )
         }
